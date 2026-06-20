@@ -1,0 +1,9 @@
+name = "protein-fold-runpod-proxy"
+main = "worker.js"
+compatibility_date = "2026-06-01"
+
+[vars]
+RUNPOD_ENDPOINT_ID = "replace-with-runpod-endpoint-id"
+RUNPOD_EXECUTION_TIMEOUT_MS = "7200000"
+RUNPOD_TTL_MS = "10800000"
+

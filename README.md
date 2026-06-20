@@ -60,6 +60,14 @@ For real ColabFold inference, install `colabfold_batch` in the worker image or m
 
 GitHub Pages is static hosting. It cannot run AlphaFold, ColabFold, CUDA, FastAPI, Redis, or a long-running GPU job. The public site only hosts the React UI. For real structure prediction, run the GPU backend and paste its URL into the "Real prediction backend URL" field on the site.
 
+Recommended low-cost deployment:
+
+```text
+GitHub Pages UI -> Cloudflare Worker proxy -> RunPod Serverless GPU worker
+```
+
+See [RUNPOD_DEPLOY.md](RUNPOD_DEPLOY.md).
+
 ### GPU backend with ColabFold
 
 Requirements:

@@ -1,0 +1,17 @@
+FROM ghcr.io/sokrypton/colabfold:1.6.1-cuda12
+
+WORKDIR /app
+
+RUN python -m pip install --no-cache-dir runpod
+
+COPY runpod/handler.py /app/handler.py
+
+ENV COLABFOLD_BIN=colabfold_batch
+ENV MAX_SEQUENCE_LENGTH=800
+ENV COLABFOLD_NUM_RECYCLE=3
+ENV COLABFOLD_MODEL_TYPE=auto
+ENV COLABFOLD_AMBER=0
+ENV PREDICT_TIMEOUT_SECONDS=7200
+
+CMD ["python", "-u", "/app/handler.py"]
+
