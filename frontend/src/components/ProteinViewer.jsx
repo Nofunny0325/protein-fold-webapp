@@ -21,7 +21,7 @@ function load3Dmol() {
   });
 }
 
-export default function ProteinViewer({ pdbUrl }) {
+export default function ProteinViewer({ apiBase, pdbUrl }) {
   const ref = useRef(null);
   const [error, setError] = useState("");
 
@@ -31,7 +31,7 @@ export default function ProteinViewer({ pdbUrl }) {
     async function render() {
       try {
         setError("");
-        const [$3Dmol, text] = await Promise.all([load3Dmol(), fetchResultText(pdbUrl)]);
+        const [$3Dmol, text] = await Promise.all([load3Dmol(), fetchResultText(apiBase, pdbUrl)]);
         if (disposed) return;
         ref.current.innerHTML = "";
         const viewer = $3Dmol.createViewer(ref.current, { backgroundColor: "white" });
@@ -49,7 +49,7 @@ export default function ProteinViewer({ pdbUrl }) {
     return () => {
       disposed = true;
     };
-  }, [pdbUrl]);
+  }, [apiBase, pdbUrl]);
 
   return (
     <div className="viewerShell">

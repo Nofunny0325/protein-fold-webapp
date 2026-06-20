@@ -56,6 +56,51 @@ Backend: http://localhost:8000/docs
 
 For real ColabFold inference, install `colabfold_batch` in the worker image or mount a LocalColabFold environment and set `PREDICT_ENGINE=colabfold`. For AlphaFold 3, mount model parameters and databases, then set `PREDICT_ENGINE=alphafold3`.
 
+## Real Prediction Mode
+
+GitHub Pages is static hosting. It cannot run AlphaFold, ColabFold, CUDA, FastAPI, Redis, or a long-running GPU job. The public site only hosts the React UI. For real structure prediction, run the GPU backend and paste its URL into the "Real prediction backend URL" field on the site.
+
+### GPU backend with ColabFold
+
+Requirements:
+
+- NVIDIA GPU
+- NVIDIA driver
+- Docker with NVIDIA Container Toolkit
+
+Run:
+
+```powershell
+docker compose -f docker-compose.gpu.yml up --build
+```
+
+Backend:
+
+```text
+http://localhost:8000
+```
+
+Then open the GitHub Pages site and enter:
+
+```text
+http://localhost:8000
+```
+
+For a remote GPU server, expose the backend through HTTPS and enter that HTTPS URL in the frontend. Browser security may block a public HTTPS page from calling a non-local HTTP GPU server.
+
+The backend runs:
+
+```text
+colabfold_batch input.fasta /results/<job_id>/colabfold --num-recycle 3 --amber --templates
+```
+
+Outputs are served through:
+
+```text
+/results/{job_id}/model.pdb
+/results/{job_id}/metrics.json
+```
+
 ## Local No-Docker Run
 
 ```powershell

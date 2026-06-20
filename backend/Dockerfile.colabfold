@@ -1,0 +1,18 @@
+FROM ghcr.io/sokrypton/colabfold:1.6.1-cuda12
+
+WORKDIR /app
+
+COPY backend/requirements-local.txt /app/backend/requirements-local.txt
+RUN python -m pip install --no-cache-dir -r /app/backend/requirements-local.txt
+
+COPY backend /app/backend
+
+ENV QUEUE_MODE=local
+ENV PREDICT_ENGINE=colabfold
+ENV COLABFOLD_BIN=colabfold_batch
+ENV RESULTS_DIR=/results
+ENV CORS_ORIGINS=https://nofunny0325.github.io,http://localhost:5173,http://127.0.0.1:5173
+
+EXPOSE 8000
+
+CMD ["python", "-B", "-m", "uvicorn", "backend.app.main:app", "--host", "0.0.0.0", "--port", "8000"]

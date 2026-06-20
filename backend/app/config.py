@@ -14,6 +14,10 @@ class Settings(BaseSettings):
     af3_model_dir: Path = Field(default=Path("/models"), alias="AF3_MODEL_DIR")
     af3_db_dir: Path = Field(default=Path("/databases"), alias="AF3_DB_DIR")
     max_sequence_length: int = Field(default=2500, alias="MAX_SEQUENCE_LENGTH")
+    cors_origins: str = Field(
+        default="http://localhost:5173,http://127.0.0.1:5173,https://nofunny0325.github.io",
+        alias="CORS_ORIGINS",
+    )
 
 
 @lru_cache

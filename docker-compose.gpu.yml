@@ -1,0 +1,25 @@
+services:
+  colabfold-api:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile.colabfold
+    environment:
+      QUEUE_MODE: local
+      PREDICT_ENGINE: colabfold
+      RESULTS_DIR: /results
+      CORS_ORIGINS: https://nofunny0325.github.io,http://localhost:5173,http://127.0.0.1:5173
+      MAX_SEQUENCE_LENGTH: 1200
+    volumes:
+      - results:/results
+    ports:
+      - "8000:8000"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+volumes:
+  results:

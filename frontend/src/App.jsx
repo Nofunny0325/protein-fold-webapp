@@ -3,17 +3,20 @@ import SequenceForm from "./components/SequenceForm.jsx";
 import JobStatus from "./components/JobStatus.jsx";
 import ProteinViewer from "./components/ProteinViewer.jsx";
 import ConfidencePanel from "./components/ConfidencePanel.jsx";
-import { fetchStatus, submitPrediction } from "./lib/api.js";
+import BackendSettings from "./components/BackendSettings.jsx";
+import { fetchStatus, getInitialApiBase, submitPrediction } from "./lib/api.js";
 
 export default function App() {
   const [jobId, setJobId] = useState(null);
   const [status, setStatus] = useState(null);
   const [error, setError] = useState("");
+  const [apiBase, setApiBase] = useState(getInitialApiBase);
+  const busy = status && !["SUCCESS", "FAILURE"].includes(status.state);
 
   async function submit(payload) {
     setError("");
     setStatus(null);
-    const res = await submitPrediction(payload).catch((err) => {
+    const res = await submitPrediction(apiBase, payload).catch((err) => {
       setError(err.message);
       return null;
     });
@@ -23,24 +26,25 @@ export default function App() {
   useEffect(() => {
     if (!jobId) return;
     const timer = setInterval(async () => {
-      const next = await fetchStatus(jobId).catch((err) => ({ stage: "ERROR", progress: 100, message: err.message }));
+      const next = await fetchStatus(apiBase, jobId).catch((err) => ({ stage: "ERROR", progress: 100, message: err.message }));
       setStatus(next);
       if (["SUCCESS", "FAILURE"].includes(next.state)) clearInterval(timer);
     }, 2000);
     return () => clearInterval(timer);
-  }, [jobId]);
+  }, [apiBase, jobId]);
 
   return (
     <main>
       <section className="workspace">
         <div className="left">
-          <SequenceForm onSubmit={submit} busy={status && !["SUCCESS", "FAILURE"].includes(status.state)} />
+          <BackendSettings apiBase={apiBase} onChange={setApiBase} busy={busy} />
+          <SequenceForm onSubmit={submit} busy={busy || !apiBase} />
           {error && <div className="panel error">{error}</div>}
           <JobStatus status={status} />
-          <ConfidencePanel metricsUrl={status?.metrics_url} pdbUrl={status?.pdb_url} />
+          <ConfidencePanel apiBase={apiBase} metricsUrl={status?.metrics_url} pdbUrl={status?.pdb_url} />
         </div>
         <div className="right">
-          {status?.pdb_url ? <ProteinViewer pdbUrl={status.pdb_url} /> : <div className="empty">No structure loaded</div>}
+          {status?.pdb_url ? <ProteinViewer apiBase={apiBase} pdbUrl={status.pdb_url} /> : <div className="empty">No structure loaded</div>}
         </div>
       </section>
     </main>

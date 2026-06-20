@@ -38,6 +38,24 @@ main {
   gap: 8px;
 }
 
+.backend {
+  display: grid;
+  gap: 8px;
+}
+
+.backendRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+}
+
+.hint {
+  margin: 0;
+  color: #5d6870;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
 label {
   font-size: 13px;
   font-weight: 700;
