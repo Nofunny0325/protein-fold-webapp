@@ -1,0 +1,58 @@
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  api:
+    image: python:3.13-slim
+    working_dir: /app
+    command: sh -c "pip install -r backend/requirements.txt && uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --reload"
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      RESULTS_DIR: /results
+      PREDICT_ENGINE: mock
+    volumes:
+      - .:/app
+      - results:/results
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+
+  worker:
+    image: python:3.13-slim
+    working_dir: /app
+    command: sh -c "pip install -r backend/requirements.txt && celery -A backend.app.celery_app.celery_app worker --loglevel=INFO --concurrency=1"
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      RESULTS_DIR: /results
+      PREDICT_ENGINE: mock
+      COLABFOLD_BIN: colabfold_batch
+      ALPHAFOLD3_IMAGE: alphafold3
+      AF3_MODEL_DIR: /models
+      AF3_DB_DIR: /databases
+    volumes:
+      - .:/app
+      - results:/results
+      # - /host/af3/models:/models:ro
+      # - /host/af3/databases:/databases:ro
+    depends_on:
+      - redis
+
+  frontend:
+    image: node:22-alpine
+    working_dir: /web
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    environment:
+      VITE_API_BASE: http://localhost:8000
+    volumes:
+      - ./frontend:/web
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
+
+volumes:
+  results:
+
