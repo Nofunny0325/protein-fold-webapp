@@ -11,6 +11,26 @@ GitHub Pages React UI
 
 ## 1. Build and push the RunPod worker image
 
+### Option A: GitHub Actions, no local Docker required
+
+This is recommended if `docker` is not installed on your PC.
+
+1. Open the GitHub repository.
+2. Go to **Actions**.
+3. Select **Publish RunPod Serverless Image**.
+4. Click **Run workflow**.
+5. Wait until it finishes.
+
+The image will be:
+
+```text
+ghcr.io/nofunny0325/protein-fold-runpod:latest
+```
+
+If RunPod cannot pull it, open the image package in GitHub Packages and set its visibility to public.
+
+### Option B: Local Docker
+
 Build from the repository root:
 
 ```bash
@@ -23,7 +43,7 @@ docker push <dockerhub-user>/protein-fold-runpod:latest
 In RunPod:
 
 - Product: Serverless
-- Container image: `<dockerhub-user>/protein-fold-runpod:latest`
+- Container image: `ghcr.io/nofunny0325/protein-fold-runpod:latest`
 - GPU: start with RTX 4090 or A40 for short proteins
 - Max workers: `1` while testing
 - Idle timeout: low value to save money
@@ -68,4 +88,3 @@ Then submit a FASTA sequence.
 - Results from RunPod async jobs are retained for a limited time, so download PDB files soon after completion.
 - Keep sequence length small while testing. ColabFold can take minutes and GPU cost is real.
 - Do not put `RUNPOD_API_KEY` in the browser or GitHub Pages.
-

@@ -68,6 +68,18 @@ GitHub Pages UI -> Cloudflare Worker proxy -> RunPod Serverless GPU worker
 
 See [RUNPOD_DEPLOY.md](RUNPOD_DEPLOY.md).
 
+If Docker is not installed locally, use the included GitHub Actions workflow:
+
+```text
+Actions -> Publish RunPod Serverless Image -> Run workflow
+```
+
+It publishes:
+
+```text
+ghcr.io/nofunny0325/protein-fold-runpod:latest
+```
+
 ### GPU backend with ColabFold
 
 Requirements:
