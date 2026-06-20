@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { absoluteUrl, fetchResultJson } from "../lib/api";
 
 export default function ConfidencePanel({ metricsUrl, pdbUrl }) {

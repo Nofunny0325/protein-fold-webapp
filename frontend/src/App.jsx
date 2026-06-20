@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import SequenceForm from "./components/SequenceForm.jsx";
 import JobStatus from "./components/JobStatus.jsx";
 import ProteinViewer from "./components/ProteinViewer.jsx";
@@ -46,4 +46,3 @@ export default function App() {
     </main>
   );
 }
-

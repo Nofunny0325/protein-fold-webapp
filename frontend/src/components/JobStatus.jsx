@@ -1,3 +1,5 @@
+import React from "react";
+
 export default function JobStatus({ status }) {
   if (!status) return null;
   return (
@@ -11,4 +13,3 @@ export default function JobStatus({ status }) {
     </section>
   );
 }
-
